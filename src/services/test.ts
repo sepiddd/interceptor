@@ -7,7 +7,7 @@ function runTest() {
   // Should return [{id:”fileid2”}]
   apiClient.get(batchUrl, { params: { ids: ["fileid2"] } });
   // Should reject as the fileid3 is missing from the response
-  //  apiClient.get(batchUrl, {params: {ids: "fileid3"]}});
+  apiClient.get(batchUrl, { params: { ids: ["fileid3"] } });
 }
 
 runTest();
