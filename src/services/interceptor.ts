@@ -1,3 +1,5 @@
+import { throttle } from "lodash";
+
 let timeout;
 let dataHolder: any = [];
 
@@ -6,10 +8,10 @@ let dataHolder: any = [];
  * @param {*} func is the input function
  * @param {*} delay is the delay time in ms for recall the function
  */
-function debounce(func, delay) {
-  clearTimeout(timeout);
-  timeout = setTimeout(func, delay);
-}
+// function debounce(func, delay) {
+//   clearTimeout(timeout);
+//   timeout = setTimeout(func, delay);
+// }
 
 /**
  *
@@ -23,11 +25,15 @@ const uniqueArray = (array: Array<String>) => {
 function batchInterceptor(instance: any) {
   instance.interceptors.request.use(
     (request: any) => {
-      // Add your code here
-      console.log(`${request.method} ${request.url}`);
+      uniqueArray(request.params.ids);
+
       return request;
     },
     (error: any) => Promise.reject(error)
   );
+
+  instance.interceptors.response.use((request: any) => {
+    dataHolder = [];
+  });
 }
 export default batchInterceptor;
