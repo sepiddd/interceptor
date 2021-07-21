@@ -1,4 +1,5 @@
 let timeout;
+let dataHolder: any = [];
 
 /**
  * This function prevent from too much API calls
@@ -9,6 +10,15 @@ function debounce(func, delay) {
   clearTimeout(timeout);
   timeout = setTimeout(func, delay);
 }
+
+/**
+ *
+ * @param array it is the array of params that holds the ids
+ * This function batched the ids
+ */
+const uniqueArray = (array: Array<String>) => {
+  dataHolder = [...(new Set([...dataHolder, ...array]) as any)];
+};
 
 function batchInterceptor(instance: any) {
   instance.interceptors.request.use(
