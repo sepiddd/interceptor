@@ -4,9 +4,9 @@ let timeout: any;
 let dataHolder: any = [];
 
 /**
- * @param {*} func is the input function
- * @param {*} delay is the delay time in ms for recall the function
  * This function prevent from too much API calls
+ * @param {() => void} func is the input function
+ * @param {number} delay is the delay time in ms for recall the function
  */
 function debounce(func: () => void, delay: number) {
   clearTimeout(timeout);
@@ -15,8 +15,8 @@ function debounce(func: () => void, delay: number) {
 
 /**
  *
+ * This function batched the ids and hold the value into dataHolder
  * @param array it is the array of params that holds the ids
- * This function batched the ids
  */
 const uniqueArray = (array: Array<string>) => {
   dataHolder = [...new Set([...dataHolder, ...array])];
@@ -40,6 +40,9 @@ function batchInterceptor(instance) {
     (error) => Promise.reject(error)
   );
 
+  /**
+   * this section will empty the batched ids after request is snet
+   */
   instance.interceptors.response.use(
     (response) => {
       dataHolder = [];
