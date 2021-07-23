@@ -20,7 +20,6 @@ function debounce(func: any, delay: any) {
  */
 const uniqueArray = (array: Array<string>) => {
   dataHolder = [...new Set([...dataHolder, ...array])];
-  console.log("dataHolder", dataHolder);
 };
 
 function batchInterceptor(instance: any) {
