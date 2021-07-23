@@ -1,6 +1,6 @@
-import { throttle } from "lodash";
+import httpAdapter from "axios/lib/adapters/http";
 
-let timeout;
+let timeout: any;
 let dataHolder: any = [];
 
 /**
@@ -8,24 +8,33 @@ let dataHolder: any = [];
  * @param {*} func is the input function
  * @param {*} delay is the delay time in ms for recall the function
  */
-// function debounce(func, delay) {
-//   clearTimeout(timeout);
-//   timeout = setTimeout(func, delay);
-// }
+function debounce(func: any, delay: any) {
+  clearTimeout(timeout);
+  timeout = setTimeout(func, delay);
+}
 
 /**
  *
  * @param array it is the array of params that holds the ids
  * This function batched the ids
  */
-const uniqueArray = (array: Array<String>) => {
-  dataHolder = [...(new Set([...dataHolder, ...array]) as any)];
+const uniqueArray = (array: Array<string>) => {
+  dataHolder = [...new Set([...dataHolder, ...array])];
+  console.log("dataHolder", dataHolder);
 };
 
 function batchInterceptor(instance: any) {
   instance.interceptors.request.use(
     (request: any) => {
-      uniqueArray(request.params.ids);
+      request.adapter = (config) => {
+        uniqueArray(config.params.ids);
+        config.params = { ids: dataHolder };
+        return new Promise((resolve, reject) => {
+          debounce(() => {
+            httpAdapter(config).then(resolve(config)).catch(reject);
+          }, 500);
+        }).then(config);
+      };
 
       return request;
     },
