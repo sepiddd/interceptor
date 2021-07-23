@@ -40,8 +40,15 @@ function batchInterceptor(instance: any) {
     (error: any) => Promise.reject(error)
   );
 
-  instance.interceptors.response.use((request: any) => {
-    dataHolder = [];
-  });
+  instance.interceptors.response.use(
+    (request: any) => {
+      dataHolder = [];
+      return request;
+    },
+    (error: any) => {
+      dataHolder = [];
+      return Promise.reject(error);
+    }
+  );
 }
 export default batchInterceptor;
