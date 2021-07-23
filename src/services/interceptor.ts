@@ -4,11 +4,11 @@ let timeout: any;
 let dataHolder: any = [];
 
 /**
- * This function prevent from too much API calls
  * @param {*} func is the input function
  * @param {*} delay is the delay time in ms for recall the function
+ * This function prevent from too much API calls
  */
-function debounce(func: any, delay: any) {
+function debounce(func: () => void, delay: number) {
   clearTimeout(timeout);
   timeout = setTimeout(func, delay);
 }
@@ -22,9 +22,9 @@ const uniqueArray = (array: Array<string>) => {
   dataHolder = [...new Set([...dataHolder, ...array])];
 };
 
-function batchInterceptor(instance: any) {
+function batchInterceptor(instance) {
   instance.interceptors.request.use(
-    (request: any) => {
+    (request) => {
       request.adapter = (config) => {
         uniqueArray(config.params.ids);
         config.params = { ids: dataHolder };
@@ -37,15 +37,15 @@ function batchInterceptor(instance: any) {
 
       return request;
     },
-    (error: any) => Promise.reject(error)
+    (error) => Promise.reject(error)
   );
 
   instance.interceptors.response.use(
-    (request: any) => {
+    (response) => {
       dataHolder = [];
-      return request;
+      return response;
     },
-    (error: any) => {
+    (error) => {
       dataHolder = [];
       return Promise.reject(error);
     }
