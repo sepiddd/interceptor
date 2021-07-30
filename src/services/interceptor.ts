@@ -30,7 +30,7 @@ function batchInterceptor(instance) {
         config.params = { ids: dataHolder };
         return new Promise((resolve, reject) => {
           debounce(() => {
-            httpAdapter(config).then(resolve(config)).catch(reject);
+            httpAdapter(config).then(resolve).catch(reject);
           }, 500);
         }).then(config);
       };
